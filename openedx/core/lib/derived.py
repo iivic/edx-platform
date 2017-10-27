@@ -33,6 +33,7 @@ def derived_dict_entry(setting_dict, key):
     """
     __DERIVED.append((setting_dict, key))
 
+
 def derive_settings(module_name):
     """
     Derives all registered settings and sets them onto a particular module.
