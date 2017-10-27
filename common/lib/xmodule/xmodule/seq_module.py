@@ -326,6 +326,11 @@ class SequenceModule(SequenceFields, ProctoringFields, XModule):
         Update the user's sequential position given the context and the
         number_of_display_items
         """
+
+        position = context.get('position')
+        if position:
+            self.position = position
+
         # If we're rendering this sequence, but no position is set yet,
         # or exceeds the length of the displayable items,
         # default the position to the first element

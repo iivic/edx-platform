@@ -476,6 +476,7 @@ class CoursewareIndex(View):
             'requested_child': self.request.GET.get("child"),
             'progress_url': reverse('progress', kwargs={'course_id': unicode(self.course_key)}),
             'disable_navigation': not self.request.user.is_authenticated(),
+            'position': self.position,
         }
         if previous_of_active_section:
             section_context['prev_url'] = _compute_section_url(previous_of_active_section, 'last')
