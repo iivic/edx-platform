@@ -1072,4 +1072,4 @@ MIDDLEWARE_CLASSES.extend(ENV_TOKENS.get('EXTRA_MIDDLEWARE_CLASSES', []))
 
 ########################## Derive Any Derived Settings  #######################
 
-derive_settings(sys.modules[__name__])
+derive_settings(__name__)

@@ -612,4 +612,4 @@ TEMPLATES[0]['OPTIONS']['debug'] = True
 
 ########################## Derive Any Derived Settings  #######################
 
-derive_settings(sys.modules[__name__])
+derive_settings(__name__)

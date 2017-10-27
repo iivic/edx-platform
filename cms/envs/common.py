@@ -115,6 +115,10 @@ from lms.envs.common import (
     # Video Image settings
     VIDEO_IMAGE_SETTINGS,
     VIDEO_TRANSCRIPTS_SETTINGS,
+
+    # Methods to derive settings
+    _make_main_mako_templates,
+    _make_locale_paths,
 )
 from path import Path as path
 from warnings import simplefilter
@@ -128,7 +132,7 @@ from openedx.core.djangoapps.theming.helpers_dirs import (
     get_theme_base_dirs_from_settings
 )
 from openedx.core.lib.license import LicenseMixin
-from openedx.core.lib.derived import derived
+from openedx.core.lib.derived import derived, derived_dict_entry
 
 ############################ FEATURE CONFIGURATION #############################
 
@@ -319,20 +323,8 @@ MAIN_MAKO_TEMPLATES_BASE = [
 ]
 MAKO_TEMPLATES['lms.main'] = lms.envs.common.MAIN_MAKO_TEMPLATES_BASE
 
-
-def _make_main_mako_templates(settings):
-    """
-    Derives the final MAKO_TEMPLATES['main'] setting from other settings.
-    """
-    if settings.ENABLE_COMPREHENSIVE_THEMING:
-        themes_dirs = get_theme_base_dirs_from_settings(settings.COMPREHENSIVE_THEME_DIRS)
-        for theme in get_themes_unchecked(themes_dirs, PROJECT_ROOT):
-            if theme.themes_base_dir not in settings.MAIN_MAKO_TEMPLATES_BASE:
-                settings.MAIN_MAKO_TEMPLATES_BASE.insert(0, theme.themes_base_dir)
-    return settings.MAIN_MAKO_TEMPLATES_BASE
 MAKO_TEMPLATES['main'] = _make_main_mako_templates
-derived(['MAKO_TEMPLATES', 'main'])
-
+derived_dict_entry('MAKO_TEMPLATES', 'main')
 
 # Django templating
 TEMPLATES = [
@@ -621,15 +613,7 @@ USE_L10N = True
 
 STATICI18N_ROOT = PROJECT_ROOT / "static"
 
-
 # Localization strings (e.g. django.po) are under these directories
-def _make_locale_paths(settings):
-    locale_paths = [settings.REPO_ROOT + '/conf/locale']  # edx-platform/conf/locale/
-    if settings.ENABLE_COMPREHENSIVE_THEMING:
-        # Add locale paths to settings for comprehensive theming.
-        for locale_path in settings.COMPREHENSIVE_THEME_LOCALE_PATHS:
-            locale_paths += (path(locale_path), )
-    return locale_paths
 LOCALE_PATHS = _make_locale_paths
 derived('LOCALE_PATHS')
 

@@ -43,7 +43,7 @@ from openedx.core.djangoapps.theming.helpers_dirs import (
     get_themes_unchecked,
     get_theme_base_dirs_from_settings
 )
-from openedx.core.lib.derived import derived
+from openedx.core.lib.derived import derived, derived_dict_entry
 from xmodule.modulestore.modulestore_settings import update_module_store_settings
 from xmodule.modulestore.edit_info import EditInfoMixin
 from lms.djangoapps.lms_xblock.mixin import LmsBlockMixin
@@ -555,7 +555,7 @@ def _make_main_mako_templates(settings):
                 settings.MAIN_MAKO_TEMPLATES_BASE.insert(0, theme.themes_base_dir)
     return settings.MAIN_MAKO_TEMPLATES_BASE
 MAKO_TEMPLATES['main'] = _make_main_mako_templates
-derived(['MAKO_TEMPLATES', 'main'])
+derived_dict_entry('MAKO_TEMPLATES', 'main')
 
 # Django templating
 TEMPLATES = [

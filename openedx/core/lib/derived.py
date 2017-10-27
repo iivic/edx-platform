@@ -5,6 +5,7 @@ other settings have been set. The derived setting can also be overridden by sett
 derived setting to an actual value.
 """
 import six
+import sys
 
 # Global list holding all settings which will be derived.
 __DERIVED = []
@@ -13,31 +14,42 @@ __DERIVED = []
 def derived(*settings):
     """
     Registers settings which are derived from other settings.
-    Can be called multiple times to add more derived settings to the list.
+    Can be called multiple times to add more derived settings.
 
-    Params:
-        - settings (list): List of setting names to register.
+    Args:
+        settings (list): List of setting names to register.
     """
     __DERIVED.extend(settings)
 
 
-def derive_settings(module):
+def derived_dict_entry(setting_dict, key):
+    """
+    Registers a setting which is a dictionary and needs a derived value for a particular key.
+    Can be called multiple times to add more derived settings.
+
+    Args:
+        setting_dict (str): Name of setting which contains a dictionary.
+        key (str): Name of key in the setting dictionary which will be derived.
+    """
+    __DERIVED.append((setting_dict, key))
+
+def derive_settings(module_name):
     """
     Derives all registered settings and sets them onto a particular module.
     Skips deriving settings that are set to a value.
 
-    Params:
-        - module (module): Module to which the derived settings will be added.
+    Args:
+        module_name (str): Name of module to which the derived settings will be added.
     """
+    module = sys.modules[module_name]
     for derived in __DERIVED:
         if isinstance(derived, six.string_types):
-            # For a simple attribute, the getter and setter are simply getattr and setattr.
             setting = getattr(module, derived)
             if callable(setting):
                 setting_val = setting(module)
                 setattr(module, derived, setting_val)
-        elif isinstance(derived, (list, tuple)):
-            # If a list/tuple, two elements are expected - else ignore.
+        elif isinstance(derived, tuple):
+            # If a tuple, two elements are expected - else ignore.
             if len(derived) == 2:
                 # Both elements are expected to be strings.
                 # The first string is the attribute which is expected to be a dictionary.

@@ -73,4 +73,4 @@ FILE_UPLOAD_HANDLERS = [
 
 ########################## Derive Any Derived Settings  #######################
 
-derive_settings(sys.modules[__name__])
+derive_settings(__name__)
